@@ -16,11 +16,13 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - run: |
+      - name: Installing dependencies
+        run: |
           apt-get update -qy
           apt-get install -y python3-dev python3-pip
           pip3 install -r requirements.txt
-          python3 manage.py test
+      - name: Running tests
+        run: python3 manage.py test
   
   deploy:
     runs-on: ubuntu-latest
