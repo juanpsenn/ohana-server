@@ -33,6 +33,7 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
           REMOTE_HOST: ${{ secrets.DEPLOY_HOST }}
           REMOTE_USER: ${{ secrets.DEPLOY_USER }}
+          ARGS: '--delete'
           SOURCE: '' 
           TARGET: ${{ secrets.DEPLOY_TARGET }}
 
