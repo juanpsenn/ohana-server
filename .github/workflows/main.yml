@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  workflow_dispatch:
+
+jobs:  
+  test:
+    runs-on: ubuntu-latests
+    container: python:3.8.5
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - run: |
+          apt-get update -qy
+          apt-get install -y python3-dev python3-pip
+          pip3 install -r requirements.txt
+          python3 manage.py test
+  
+  deploy:
+    runs-on: ubuntu-latest
+    container: alpine
+    
+    steps:
+      - uses: actions/checkout@v2
+      - name: Adding SSH Key 
+      - run: |
+          apk add openssh-client
+          eval $(ssh-agent -s)
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' | ssh-add -
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+      - name: Pushing to remote
+      - run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} "touch ~/test.sh"
+
+
+      
