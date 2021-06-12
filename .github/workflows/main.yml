@@ -10,7 +10,7 @@ on:
 
 jobs:  
   test:
-    runs-on: ubuntu-latests
+    runs-on: ubuntu-latest
     container: python:3.8.5
 
     steps:
