@@ -24,20 +24,20 @@ jobs:
       - name: Running tests
         run: python3 manage.py test
   
-  deploy:
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-      - uses: actions/checkout@v2
-      - name: Deploy to Server
-        uses: easingthemes/ssh-deploy@main
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
-          REMOTE_HOST: ${{ secrets.DEPLOY_HOST }}
-          REMOTE_USER: ${{ secrets.DEPLOY_USER }}
-          ARGS: '--delete'
-          SOURCE: '' 
-          TARGET: ${{ secrets.DEPLOY_TARGET }}
+#   deploy:
+#     runs-on: ubuntu-latest
+#     needs: test
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: Deploy to Server
+#         uses: easingthemes/ssh-deploy@main
+#         env:
+#           SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
+#           REMOTE_HOST: ${{ secrets.DEPLOY_HOST }}
+#           REMOTE_USER: ${{ secrets.DEPLOY_USER }}
+#           ARGS: '--delete'
+#           SOURCE: '' 
+#           TARGET: ${{ secrets.DEPLOY_TARGET }}
 
 
       
