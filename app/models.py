@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 # Create your models here.
@@ -29,13 +30,13 @@ class EventType(models.Model):
 
 
 class DaysOfWeek(models.IntegerChoices):
-    SUNDAY = 0, "Sunday"
-    MONDAY = 1, "Monday"
-    TUESDAY = 2, "Tuesday"
-    WEDNESDAY = 3, "Wednesday"
-    THURSDAY = 4, "Thursday"
-    FRYDAY = 5, "Fryday"
-    SATURDAY = 6, "Saturday"
+    SUNDAY = 0, "Domingo"
+    MONDAY = 1, "Lunes"
+    TUESDAY = 2, "Martes"
+    WEDNESDAY = 3, "Miercoles"
+    THURSDAY = 4, "Jueves"
+    FRYDAY = 5, "Viernes"
+    SATURDAY = 6, "Sabado"
 
 
 class AttentionSchedule(models.Model):
