@@ -23,7 +23,7 @@ class EventFactory(factory.django.DjangoModelFactory):
         model = Event
 
     name = factory.Faker("company", locale="es_ES")
-    type = factory.SubFactory(EventTypeFactory)
+    event_type = factory.SubFactory(EventTypeFactory)
     init_date = datetime.date(2021, 1, 1)
     end_date = datetime.date(2021, 2, 1)
     description = factory.Faker("paragraph", nb_sentences=3)

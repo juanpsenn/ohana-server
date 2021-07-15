@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 # Create your models here.
 class Event(models.Model):
     name = models.CharField(max_length=128)
-    type = models.ForeignKey(
+    event_type = models.ForeignKey(
         "app.EventType", on_delete=models.DO_NOTHING, related_name="events"
     )
     init_date = models.DateField()

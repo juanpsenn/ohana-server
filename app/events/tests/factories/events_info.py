@@ -19,4 +19,3 @@ class LocationFactory(factory.django.DjangoModelFactory):
     street = factory.Faker("street_name", locale="es_ES")
     address_line = factory.Faker("street_address", locale="es_ES")
     postal_code = 5000
-
