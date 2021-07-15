@@ -4,7 +4,7 @@ from app.models import Event, AttentionSchedule, DaysOfWeek
 
 
 class AttentionScheduleSerializer(serializers.ModelSerializer):
-    day = serializers.CharField(source='get_day_display')
+    day = serializers.CharField(source="get_day_display")
 
     class Meta:
         model = AttentionSchedule
@@ -17,4 +17,4 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         depth = 1
-        fields = '__all__'
+        fields = "__all__"
