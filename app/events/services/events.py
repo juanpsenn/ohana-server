@@ -1,4 +1,5 @@
-from datetime import time, date
+from datetime import date
+from datetime import time
 
 from app import models
 

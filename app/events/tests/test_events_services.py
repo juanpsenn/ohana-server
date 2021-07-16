@@ -2,18 +2,16 @@ import datetime
 
 import pytest
 from django.forms.models import model_to_dict
+
 from app import models
-from app.events.services.events import (
-    location_create,
-    contact_create,
-    schedule_create,
-    event_create,
-)
-from app.events.tests.factories.events import EventFactory, EventTypeFactory
-from app.events.tests.factories.events_info import (
-    ContactInformationFactory,
-    LocationFactory,
-)
+from app.events.services.events import contact_create
+from app.events.services.events import event_create
+from app.events.services.events import location_create
+from app.events.services.events import schedule_create
+from app.events.tests.factories.events import EventFactory
+from app.events.tests.factories.events import EventTypeFactory
+from app.events.tests.factories.events_info import ContactInformationFactory
+from app.events.tests.factories.events_info import LocationFactory
 
 
 @pytest.mark.django_db

@@ -1,6 +1,7 @@
 import factory.django
 
-from app.models import ContactInformation, Location
+from app.models import ContactInformation
+from app.models import Location
 
 
 class ContactInformationFactory(factory.django.DjangoModelFactory):

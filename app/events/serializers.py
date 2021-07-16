@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from app.models import Event, AttentionSchedule, DaysOfWeek
+from app.models import AttentionSchedule
+from app.models import Event
 
 
 class AttentionScheduleSerializer(serializers.ModelSerializer):

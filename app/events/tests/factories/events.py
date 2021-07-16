@@ -3,11 +3,11 @@ import random
 
 import factory
 
-from app.events.tests.factories.events_info import (
-    ContactInformationFactory,
-    LocationFactory,
-)
-from app.models import Event, EventType, AttentionSchedule
+from app.events.tests.factories.events_info import ContactInformationFactory
+from app.events.tests.factories.events_info import LocationFactory
+from app.models import AttentionSchedule
+from app.models import Event
+from app.models import EventType
 
 
 class EventTypeFactory(factory.django.DjangoModelFactory):
