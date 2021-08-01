@@ -1,14 +1,13 @@
-ohana-server
----
+# ohana-server
 
-##Guia de inicio rapido
+## Guia de inicio rapido
 
-###Requisitos
+### Requisitos
 
 - docker
 - docker-compose
 
-###Instalacion
+### Instalacion
 
 - Clonar repositorio
 ```
