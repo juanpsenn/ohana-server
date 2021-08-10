@@ -10,8 +10,15 @@ from utilities.serializers import inline_serializer
 
 
 class EventListApi(APIView, CustomPageNumberPagination):
+    class FilterSerializer(serializers.Serializer):
+        q = serializers.CharField(max_length=128, required=False)
+
     def get(self, request):
-        events = list_events()
+        filters_serializer = self.FilterSerializer(data=request.query_params)
+        filters_serializer.is_valid(raise_exception=True)
+
+        events = list_events(filters=filters_serializer.validated_data)
+
         paginated_events = self.paginate_queryset(events, request, view=self)
         return self.get_paginated_response(
             EventSerializer(paginated_events, many=True).data

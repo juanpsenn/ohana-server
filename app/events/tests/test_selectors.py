@@ -11,3 +11,12 @@ def test_list_events():
 
     assert events.count() == 3
     assert events[0].attention_schedule.count() == 3
+
+
+@pytest.mark.django_db
+def test_list_events_with_filter():
+    _ = EventFactory.create_batch(3, description="Event test")
+    events = list_events(filters={"q": "test"})
+
+    assert events.count() == 3
+    assert events[0].attention_schedule.count() == 3
