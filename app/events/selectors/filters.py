@@ -1,12 +1,17 @@
 import django_filters
+from django.db.models import Q
 
 from app.models import Event
 
 
 class EventFilter(django_filters.FilterSet):
-    name = django_filters.CharFilter(lookup_expr="icontains")
-    description = django_filters.CharFilter(lookup_expr="icontains")
+    q = django_filters.CharFilter(method="custom_filter")
 
     class Meta:
         model = Event
-        fields = ["name", "description"]
+        fields = ["q"]
+
+    def custom_filter(self, queryset, name, value):
+        return queryset.filter(
+            Q(name__icontains=value) | Q(description__contains=value)
+        )

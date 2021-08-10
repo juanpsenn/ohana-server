@@ -11,8 +11,7 @@ from utilities.serializers import inline_serializer
 
 class EventListApi(APIView, CustomPageNumberPagination):
     class FilterSerializer(serializers.Serializer):
-        name = serializers.CharField(max_length=128, required=False)
-        description = serializers.CharField(max_length=255, required=False)
+        q = serializers.CharField(max_length=128, required=False)
 
     def get(self, request):
         filters_serializer = self.FilterSerializer(data=request.query_params)
