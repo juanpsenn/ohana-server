@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from app.events.selectors.events import list_events
 from app.events.serializers import EventSerializer
 from app.events.services.events import event_create
+from app.events.services.events import event_update
 from utilities.http import CustomPageNumberPagination
 from utilities.serializers import inline_serializer
 
@@ -63,4 +64,48 @@ class EventCreateApi(APIView):
         serializer.is_valid(raise_exception=True)
 
         event = event_create(**serializer.validated_data)
+        return Response(EventSerializer(event).data, status=201)
+
+
+class EventUpdateApi(APIView):
+    class InputSerializer(serializers.Serializer):
+        name = serializers.CharField(max_length=128)
+        event_type = serializers.IntegerField()
+        init_date = serializers.DateField()
+        end_date = serializers.DateField()
+        description = serializers.CharField(max_length=255)
+        contact = inline_serializer(
+            fields={
+                "id": serializers.IntegerField(required=False),
+                "name": serializers.CharField(max_length=128),
+                "phone": serializers.CharField(max_length=32),
+                "email": serializers.EmailField(allow_null=True),
+            },
+            allow_null=True,
+        )
+        location = inline_serializer(
+            fields={
+                "id": serializers.IntegerField(required=False),
+                "street": serializers.CharField(max_length=128),
+                "address_line": serializers.CharField(max_length=128),
+                "postal_code": serializers.IntegerField(allow_null=True),
+            },
+            allow_null=True,
+        )
+        attention_schedule = inline_serializer(
+            fields={
+                "id": serializers.IntegerField(required=False),
+                "day": serializers.IntegerField(),
+                "from_time": serializers.TimeField(),
+                "to_time": serializers.TimeField(),
+            },
+            many=True,
+            allow_null=True,
+        )
+
+    def put(self, request, event_id):
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        event = event_update(**serializer.validated_data, id=event_id)
         return Response(EventSerializer(event).data, status=201)
