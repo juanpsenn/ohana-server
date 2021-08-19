@@ -2,12 +2,23 @@ from rest_framework import serializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from app.events.selectors.events import get_event
 from app.events.selectors.events import list_events
 from app.events.serializers import EventSerializer
 from app.events.services.events import event_create
 from app.events.services.events import event_update
 from utilities.http import CustomPageNumberPagination
 from utilities.serializers import inline_serializer
+
+
+class EventGetApi(APIView, CustomPageNumberPagination):
+    def get(self, request, event_id):
+        event = get_event(event_id)
+        if event:
+            return Response(EventSerializer(event).data, status=200)
+        return Response(
+            {"detail": f"Event <id:{event_id}> not found."}, status=404
+        )
 
 
 class EventListApi(APIView, CustomPageNumberPagination):
