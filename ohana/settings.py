@@ -29,6 +29,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "ec2-18-217-51-76.us-east-2.compute.amazonaws.com",
     "localhost",
+    "1936-190-139-209-235.ngrok.io",
 ]
 
 # Application definition
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "corsheaders",
     "django_extensions",
+    "django_mercadopago",
 ]
 
 MIDDLEWARE = [
@@ -141,4 +143,12 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 GRAPH_MODELS = {
     "app_labels": ["app"],
+}
+
+MERCADOPAGO = {
+    "autoprocess": True,
+    "success_url": "ohana:mp_success",
+    "failure_url": "ohana:mp_failure",
+    "pending_url": "ohana:mp_pending",
+    "base_host": "https://1936-190-139-209-235.ngrok.io",
 }
