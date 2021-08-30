@@ -22,6 +22,20 @@ class Event(models.Model):
         null=True,
         related_name="events",
     )
+    image = models.URLField(null=True)
+    goal = models.DecimalField(decimal_places=2, max_digits=15, null=True)
+
+    @property
+    def donations_count(self):
+        return 0
+
+    @property
+    def currency(self):
+        return "Pesos Argentinos"
+
+    @property
+    def funds_collected(self):
+        return 0
 
 
 class EventType(models.Model):
