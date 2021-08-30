@@ -120,6 +120,7 @@ def test_event_create():
         init_date=datetime.date(2021, 1, 1),
         end_date=datetime.date(2021, 2, 1),
         description="Lorem ipsum",
+        goal=1000,
         contact=model_to_dict(contact, exclude=["id"]),
         location=model_to_dict(location, exclude=["id"]),
         attention_schedule=[

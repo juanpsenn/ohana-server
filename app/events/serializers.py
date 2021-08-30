@@ -14,6 +14,9 @@ class AttentionScheduleSerializer(serializers.ModelSerializer):
 
 class EventSerializer(serializers.ModelSerializer):
     attention_schedule = AttentionScheduleSerializer(many=True)
+    funds_collected = serializers.DecimalField(max_digits=15, decimal_places=2)
+    currency = serializers.CharField()
+    donations_count = serializers.IntegerField()
 
     class Meta:
         model = Event
