@@ -24,6 +24,8 @@ class Event(models.Model):
     )
     image = models.URLField(null=True)
     goal = models.DecimalField(decimal_places=2, max_digits=15, null=True)
+    registred_at = models.DateTimeField(auto_created=True, null=True)
+    updated_at = models.DateTimeField(null=True)
 
     @property
     def donations_count(self):
