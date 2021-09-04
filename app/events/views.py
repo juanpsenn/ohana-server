@@ -44,6 +44,8 @@ class EventCreateApi(APIView):
         init_date = serializers.DateField()
         end_date = serializers.DateField()
         description = serializers.CharField(max_length=255)
+        goal = serializers.DecimalField(decimal_places=2, max_digits=15)
+        image = serializers.URLField(required=False)
         contact = inline_serializer(
             fields={
                 "name": serializers.CharField(max_length=128),
@@ -86,6 +88,7 @@ class EventUpdateApi(APIView):
         init_date = serializers.DateField()
         end_date = serializers.DateField()
         description = serializers.CharField(max_length=255)
+        image = serializers.URLField(required=False)
         contact = inline_serializer(
             fields={
                 "id": serializers.IntegerField(required=False),

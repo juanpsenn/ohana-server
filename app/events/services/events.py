@@ -1,4 +1,5 @@
 from datetime import date
+from datetime import datetime
 from datetime import time
 
 from django.db import transaction
@@ -71,6 +72,7 @@ def event_update(
     init_date: date,
     end_date: date,
     description: str,
+    image: str = None,
     contact: dict = None,
     location: dict = None,
     category: int = None,
@@ -89,6 +91,8 @@ def event_update(
             init_date=init_date,
             end_date=end_date,
             description=description,
+            image=image,
+            updated_at=datetime.now(),
             category_id=category,
         )
         event = event.last()
@@ -111,6 +115,8 @@ def event_create(
     init_date: date,
     end_date: date,
     description: str,
+    goal: float,
+    image: str = None,
     contact: dict = None,
     location: dict = None,
     category: int = None,
@@ -127,6 +133,8 @@ def event_create(
         init_date=init_date,
         end_date=end_date,
         description=description,
+        goal=goal,
+        image=image,
         contact=contact,
         location=location,
         category_id=category,
