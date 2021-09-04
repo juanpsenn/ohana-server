@@ -2,8 +2,10 @@ from rest_framework import serializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from app.events.selectors.categories import list_categories
 from app.events.selectors.events import get_event
 from app.events.selectors.events import list_events
+from app.events.serializers import CategorySerializer
 from app.events.serializers import EventSerializer
 from app.events.services.events import event_create
 from app.events.services.events import event_update
@@ -19,6 +21,16 @@ class EventGetApi(APIView, CustomPageNumberPagination):
         return Response(
             {"detail": f"Event <id:{event_id}> not found."}, status=404
         )
+
+
+class CategoryListApi(APIView):
+    def get(self, request):
+        categories = list_categories()
+        if categories:
+            return Response(
+                CategorySerializer(categories, many=True).data, status=200
+            )
+        return Response({"detail": "No categories found."}, status=204)
 
 
 class EventListApi(APIView, CustomPageNumberPagination):

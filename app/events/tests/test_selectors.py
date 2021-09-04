@@ -1,9 +1,11 @@
 import pytest
 
 from app import models
+from app.events.selectors.categories import list_categories
 from app.events.selectors.events import get_event
 from app.events.selectors.events import list_events
 from app.events.tests.factories.events import EventFactory
+from app.events.tests.factories.events_info import CategoryFactory
 
 
 @pytest.mark.django_db
@@ -30,3 +32,11 @@ def test_get_event():
     event = get_event(event_id=1)
 
     assert isinstance(event, models.Event)
+
+
+@pytest.mark.django_db
+def test_list_categories():
+    _ = CategoryFactory.create_batch(3)
+    categories = list_categories()
+
+    assert categories.count() == 3

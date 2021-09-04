@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from app.models import AttentionSchedule
+from app.models import Category
 from app.models import Event
 
 
@@ -21,4 +22,10 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         depth = 1
+        fields = "__all__"
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
         fields = "__all__"
