@@ -60,6 +60,7 @@ class EventCreateApi(APIView):
             },
             allow_null=True,
         )
+        category = serializers.IntegerField(allow_null=True)
         attention_schedule = inline_serializer(
             fields={
                 "day": serializers.IntegerField(),
@@ -103,6 +104,7 @@ class EventUpdateApi(APIView):
             },
             allow_null=True,
         )
+        category = serializers.IntegerField(allow_null=True)
         attention_schedule = inline_serializer(
             fields={
                 "id": serializers.IntegerField(required=False),

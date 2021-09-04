@@ -14,6 +14,7 @@ from app.events.services.events import schedule_create
 from app.events.services.events import schedule_update
 from app.events.tests.factories.events import EventFactory
 from app.events.tests.factories.events import EventTypeFactory
+from app.events.tests.factories.events_info import CategoryFactory
 from app.events.tests.factories.events_info import ContactInformationFactory
 from app.events.tests.factories.events_info import LocationFactory
 
@@ -114,6 +115,7 @@ def test_event_create():
     event_type = EventTypeFactory()
     contact = ContactInformationFactory()
     location = LocationFactory()
+    category = CategoryFactory()
     event = event_create(
         name="Patitas de perro",
         event_type=event_type.id,
@@ -122,6 +124,7 @@ def test_event_create():
         description="Lorem ipsum",
         contact=model_to_dict(contact, exclude=["id"]),
         location=model_to_dict(location, exclude=["id"]),
+        category=category.id,
         attention_schedule=[
             {"day": 1, "from_time": "09:00:00", "to_time": "13:00:00"}
         ],

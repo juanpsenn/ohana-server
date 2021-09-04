@@ -73,6 +73,7 @@ def event_update(
     description: str,
     contact: dict = None,
     location: dict = None,
+    category: int = None,
     attention_schedule: list = None
 ) -> models.Event:
     with transaction.atomic():
@@ -88,6 +89,7 @@ def event_update(
             init_date=init_date,
             end_date=end_date,
             description=description,
+            category_id=category,
         )
         event = event.last()
 
@@ -111,6 +113,7 @@ def event_create(
     description: str,
     contact: dict = None,
     location: dict = None,
+    category: int = None,
     attention_schedule: list = None
 ) -> models.Event:
     if contact:
@@ -126,6 +129,7 @@ def event_create(
         description=description,
         contact=contact,
         location=location,
+        category_id=category,
     )
 
     if attention_schedule:

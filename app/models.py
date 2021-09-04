@@ -22,6 +22,12 @@ class Event(models.Model):
         null=True,
         related_name="events",
     )
+    category = models.ForeignKey(
+        "app.Category",
+        on_delete=models.DO_NOTHING,
+        null=True,
+        related_name="events",
+    )
 
 
 class EventType(models.Model):
@@ -59,3 +65,7 @@ class Location(models.Model):
     street = models.CharField(max_length=128)
     address_line = models.CharField(max_length=128)
     postal_code = models.PositiveIntegerField(null=True)
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=128)

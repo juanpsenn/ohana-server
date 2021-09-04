@@ -3,9 +3,9 @@ import random
 
 import factory
 
+from app.events.tests.factories.events_info import CategoryFactory
 from app.events.tests.factories.events_info import ContactInformationFactory
 from app.events.tests.factories.events_info import LocationFactory
-from app.models import AttentionSchedule
 from app.models import Event
 from app.models import EventType
 
@@ -29,6 +29,7 @@ class EventFactory(factory.django.DjangoModelFactory):
     description = factory.Faker("paragraph", nb_sentences=3)
     contact = factory.SubFactory(ContactInformationFactory)
     location = factory.SubFactory(LocationFactory)
+    category = factory.SubFactory(CategoryFactory)
 
     @factory.post_generation
     def generate_schedule(self, create, extracted, **kwargs):
@@ -39,7 +40,7 @@ class EventFactory(factory.django.DjangoModelFactory):
 
 class AttentionScheduleFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = AttentionSchedule
+        model = "app.AttentionSchedule"
 
     day = random.randint(0, 6)
     from_time = datetime.time(9, 0)
