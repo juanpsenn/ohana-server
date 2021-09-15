@@ -85,3 +85,24 @@ class Location(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=128)
+
+
+class UserInfo(models.Model):
+    first_name = models.CharField(max_length=128)
+    last_name = models.CharField(max_length=128)
+    phone = models.CharField(max_length=32)
+    country = models.ForeignKey(
+        "app.Country",
+        on_delete=models.DO_NOTHING,
+        null=True,
+        related_name="users",
+    )
+    province = models.CharField(max_length=128)
+    city = models.CharField(max_length=128)
+    user = models.OneToOneField(
+        "auth.User", on_delete=models.DO_NOTHING, related_name="additional_info"
+    )
+
+
+class Country(models.Model):
+    name = models.CharField(max_length=128)
