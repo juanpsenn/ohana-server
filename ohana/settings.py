@@ -147,8 +147,8 @@ GRAPH_MODELS = {
 
 MERCADOPAGO = {
     "autoprocess": True,
-    "success_url": "ohana:mp_success",
-    "failure_url": "ohana:mp_failure",
-    "pending_url": "ohana:mp_pending",
-    "base_host": "https://287f-181-94-46-13.ngrok.io",
+    "success_url": "donations:payment_received",
+    "failure_url": "http://localhost:8000/",
+    "pending_url": "http://localhost:8000/",
+    "base_host": "https://36a1-181-95-13-54.ngrok.io",
 }
