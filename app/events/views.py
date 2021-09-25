@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -49,7 +51,31 @@ class EventListApi(APIView, CustomPageNumberPagination):
         )
 
 
+class MyEventsListApi(APIView, CustomPageNumberPagination):
+    authentication_classes = [
+        TokenAuthentication,
+    ]
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    def get(self, request):
+        events = list_events(filters={"owner_id": request.user.id})
+
+        paginated_events = self.paginate_queryset(events, request, view=self)
+        return self.get_paginated_response(
+            EventSerializer(paginated_events, many=True).data
+        )
+
+
 class EventCreateApi(APIView):
+    authentication_classes = [
+        TokenAuthentication,
+    ]
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
     class InputSerializer(serializers.Serializer):
         name = serializers.CharField(max_length=128)
         event_type = serializers.IntegerField()
@@ -89,7 +115,7 @@ class EventCreateApi(APIView):
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        event = event_create(**serializer.validated_data)
+        event = event_create(**serializer.validated_data, user=request.user.id)
         return Response(EventSerializer(event).data, status=201)
 
 
