@@ -59,8 +59,17 @@ class MyEventsListApi(APIView, CustomPageNumberPagination):
         IsAuthenticated,
     ]
 
+    class FilterSerializer(serializers.Serializer):
+        q = serializers.CharField(max_length=128, required=False)
+
     def get(self, request):
-        events = list_events(filters={"owner_id": request.user.id})
+        filters_serializer = self.FilterSerializer(data=request.query_params)
+        filters_serializer.is_valid(raise_exception=True)
+
+        filters = filters_serializer.validated_data
+        filters.update({"owner_id": request.user.id})
+
+        events = list_events(filters=filters)
 
         paginated_events = self.paginate_queryset(events, request, view=self)
         return self.get_paginated_response(
