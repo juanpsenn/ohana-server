@@ -22,7 +22,7 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         depth = 1
-        fields = "__all__"
+        exclude = ["owner"]
 
 
 class CategorySerializer(serializers.ModelSerializer):

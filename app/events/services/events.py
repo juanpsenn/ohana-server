@@ -120,7 +120,8 @@ def event_create(
     contact: dict = None,
     location: dict = None,
     category: int = None,
-    attention_schedule: list = None
+    attention_schedule: list = None,
+    user: int
 ) -> models.Event:
     if contact:
         contact = contact_create(**contact)
@@ -138,6 +139,7 @@ def event_create(
         contact=contact,
         location=location,
         category_id=category,
+        owner_id=user,
     )
 
     if attention_schedule:

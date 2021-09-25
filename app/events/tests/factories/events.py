@@ -3,6 +3,7 @@ import random
 
 import factory
 
+from app.auth.tests.factories.auth import UserFactory
 from app.events.tests.factories.events_info import CategoryFactory
 from app.events.tests.factories.events_info import ContactInformationFactory
 from app.events.tests.factories.events_info import LocationFactory
@@ -30,6 +31,7 @@ class EventFactory(factory.django.DjangoModelFactory):
     contact = factory.SubFactory(ContactInformationFactory)
     location = factory.SubFactory(LocationFactory)
     category = factory.SubFactory(CategoryFactory)
+    owner = factory.SubFactory(UserFactory)
 
     @factory.post_generation
     def generate_schedule(self, create, extracted, **kwargs):
