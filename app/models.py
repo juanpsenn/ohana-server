@@ -22,6 +22,31 @@ class Event(models.Model):
         null=True,
         related_name="events",
     )
+    image = models.URLField(null=True)
+    goal = models.DecimalField(decimal_places=2, max_digits=15, null=True)
+    registred_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+    category = models.ForeignKey(
+        "app.Category",
+        on_delete=models.DO_NOTHING,
+        null=True,
+        related_name="events",
+    )
+    owner = models.ForeignKey(
+        "auth.User", on_delete=models.DO_NOTHING, null=True
+    )
+
+    @property
+    def donations_count(self):
+        return 0
+
+    @property
+    def currency(self):
+        return "Pesos Argentinos"
+
+    @property
+    def funds_collected(self):
+        return 0
 
 
 class EventType(models.Model):
@@ -59,3 +84,28 @@ class Location(models.Model):
     street = models.CharField(max_length=128)
     address_line = models.CharField(max_length=128)
     postal_code = models.PositiveIntegerField(null=True)
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=128)
+
+
+class UserInfo(models.Model):
+    first_name = models.CharField(max_length=128)
+    last_name = models.CharField(max_length=128)
+    phone = models.CharField(max_length=32)
+    country = models.ForeignKey(
+        "app.Country",
+        on_delete=models.DO_NOTHING,
+        null=True,
+        related_name="users",
+    )
+    province = models.CharField(max_length=128)
+    city = models.CharField(max_length=128)
+    user = models.OneToOneField(
+        "auth.User", on_delete=models.DO_NOTHING, related_name="additional_info"
+    )
+
+
+class Country(models.Model):
+    name = models.CharField(max_length=128)

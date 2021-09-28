@@ -4,6 +4,7 @@ import pytest
 from django.forms.models import model_to_dict
 
 from app import models
+from app.auth.tests.factories.auth import UserFactory
 from app.events.services.events import contact_create
 from app.events.services.events import contact_update
 from app.events.services.events import event_create
@@ -14,6 +15,7 @@ from app.events.services.events import schedule_create
 from app.events.services.events import schedule_update
 from app.events.tests.factories.events import EventFactory
 from app.events.tests.factories.events import EventTypeFactory
+from app.events.tests.factories.events_info import CategoryFactory
 from app.events.tests.factories.events_info import ContactInformationFactory
 from app.events.tests.factories.events_info import LocationFactory
 
@@ -114,17 +116,22 @@ def test_event_create():
     event_type = EventTypeFactory()
     contact = ContactInformationFactory()
     location = LocationFactory()
+    category = CategoryFactory()
+    owner = UserFactory()
     event = event_create(
         name="Patitas de perro",
         event_type=event_type.id,
         init_date=datetime.date(2021, 1, 1),
         end_date=datetime.date(2021, 2, 1),
         description="Lorem ipsum",
+        goal=1000,
         contact=model_to_dict(contact, exclude=["id"]),
         location=model_to_dict(location, exclude=["id"]),
+        category=category.id,
         attention_schedule=[
             {"day": 1, "from_time": "09:00:00", "to_time": "13:00:00"}
         ],
+        user=owner.id,
     )
 
     assert isinstance(event, models.Event)

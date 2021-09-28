@@ -9,7 +9,7 @@ class EventFilter(django_filters.FilterSet):
 
     class Meta:
         model = Event
-        fields = ["q"]
+        fields = ["q", "owner_id"]
 
     def custom_filter(self, queryset, name, value):
         return queryset.filter(

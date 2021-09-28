@@ -1,9 +1,13 @@
 from rest_framework import serializers
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from app.events.selectors.categories import list_categories
 from app.events.selectors.events import get_event
 from app.events.selectors.events import list_events
+from app.events.serializers import CategorySerializer
 from app.events.serializers import EventSerializer
 from app.events.services.events import event_create
 from app.events.services.events import event_update
@@ -19,6 +23,16 @@ class EventGetApi(APIView, CustomPageNumberPagination):
         return Response(
             {"detail": f"Event <id:{event_id}> not found."}, status=404
         )
+
+
+class CategoryListApi(APIView):
+    def get(self, request):
+        categories = list_categories()
+        if categories:
+            return Response(
+                CategorySerializer(categories, many=True).data, status=200
+            )
+        return Response({"detail": "No categories found."}, status=204)
 
 
 class EventListApi(APIView, CustomPageNumberPagination):
@@ -37,13 +51,48 @@ class EventListApi(APIView, CustomPageNumberPagination):
         )
 
 
+class MyEventsListApi(APIView, CustomPageNumberPagination):
+    authentication_classes = [
+        TokenAuthentication,
+    ]
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    class FilterSerializer(serializers.Serializer):
+        q = serializers.CharField(max_length=128, required=False)
+
+    def get(self, request):
+        filters_serializer = self.FilterSerializer(data=request.query_params)
+        filters_serializer.is_valid(raise_exception=True)
+
+        filters = filters_serializer.validated_data
+        filters.update({"owner_id": request.user.id})
+
+        events = list_events(filters=filters)
+
+        paginated_events = self.paginate_queryset(events, request, view=self)
+        return self.get_paginated_response(
+            EventSerializer(paginated_events, many=True).data
+        )
+
+
 class EventCreateApi(APIView):
+    authentication_classes = [
+        TokenAuthentication,
+    ]
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
     class InputSerializer(serializers.Serializer):
         name = serializers.CharField(max_length=128)
         event_type = serializers.IntegerField()
         init_date = serializers.DateField()
         end_date = serializers.DateField()
         description = serializers.CharField(max_length=255)
+        goal = serializers.DecimalField(decimal_places=2, max_digits=15)
+        image = serializers.URLField(required=False)
         contact = inline_serializer(
             fields={
                 "name": serializers.CharField(max_length=128),
@@ -60,6 +109,7 @@ class EventCreateApi(APIView):
             },
             allow_null=True,
         )
+        category = serializers.IntegerField(allow_null=True)
         attention_schedule = inline_serializer(
             fields={
                 "day": serializers.IntegerField(),
@@ -74,7 +124,7 @@ class EventCreateApi(APIView):
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        event = event_create(**serializer.validated_data)
+        event = event_create(**serializer.validated_data, user=request.user.id)
         return Response(EventSerializer(event).data, status=201)
 
 
@@ -85,6 +135,7 @@ class EventUpdateApi(APIView):
         init_date = serializers.DateField()
         end_date = serializers.DateField()
         description = serializers.CharField(max_length=255)
+        image = serializers.URLField(required=False)
         contact = inline_serializer(
             fields={
                 "id": serializers.IntegerField(required=False),
@@ -103,6 +154,7 @@ class EventUpdateApi(APIView):
             },
             allow_null=True,
         )
+        category = serializers.IntegerField(allow_null=True)
         attention_schedule = inline_serializer(
             fields={
                 "id": serializers.IntegerField(required=False),

@@ -1,4 +1,5 @@
 from datetime import date
+from datetime import datetime
 from datetime import time
 
 from django.db import transaction
@@ -71,8 +72,10 @@ def event_update(
     init_date: date,
     end_date: date,
     description: str,
+    image: str = None,
     contact: dict = None,
     location: dict = None,
+    category: int = None,
     attention_schedule: list = None
 ) -> models.Event:
     with transaction.atomic():
@@ -88,6 +91,9 @@ def event_update(
             init_date=init_date,
             end_date=end_date,
             description=description,
+            image=image,
+            updated_at=datetime.now(),
+            category_id=category,
         )
         event = event.last()
 
@@ -109,9 +115,13 @@ def event_create(
     init_date: date,
     end_date: date,
     description: str,
+    goal: float,
+    image: str = None,
     contact: dict = None,
     location: dict = None,
-    attention_schedule: list = None
+    category: int = None,
+    attention_schedule: list = None,
+    user: int
 ) -> models.Event:
     if contact:
         contact = contact_create(**contact)
@@ -124,8 +134,12 @@ def event_create(
         init_date=init_date,
         end_date=end_date,
         description=description,
+        goal=goal,
+        image=image,
         contact=contact,
         location=location,
+        category_id=category,
+        owner_id=user,
     )
 
     if attention_schedule:

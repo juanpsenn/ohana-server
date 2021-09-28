@@ -27,7 +27,7 @@ SECRET_KEY = (
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "ec2-18-217-51-76.us-east-2.compute.amazonaws.com",
+    "juanpsenn.pythonanywhere.com",
     "localhost",
     "*",
 ]
