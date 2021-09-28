@@ -1,6 +1,7 @@
 from typing import Optional
 
 from django.contrib.auth import models as auth_models
+from django_mercadopago.models import Account
 from rest_framework.authtoken.models import Token
 
 from app import models
@@ -28,7 +29,7 @@ def signup(
     phone: str,
     country: Optional[int],
     province: str,
-    city: str
+    city: str,
 ) -> auth_models.User:
     user = auth_models.User.objects.create_user(
         username=username,
@@ -47,3 +48,15 @@ def signup(
         city=city,
     )
     return user
+
+
+def create_mp_account(
+    *, name: str, user: int, app_id: str, secret_key: str
+) -> Account:
+    return Account.objects.create(
+        name=name,
+        slug=f"{user}-{name.replace(' ', '-')}",
+        app_id=app_id,
+        secret_key=secret_key,
+        sandbox=False,
+    )

@@ -1,10 +1,14 @@
 from rest_framework import serializers
+from rest_framework import status
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from app.auth.serializers import UserSerializer
+from app.auth.service import create_mp_account
 from app.auth.service import signin
 from app.auth.service import signup
 
@@ -40,3 +44,25 @@ class SignupApi(APIView):
 
         user = signup(**serializer.validated_data)
         return Response(UserSerializer(user).data, status=201)
+
+
+class CreateMPAccount(APIView):
+    permission_classes = [
+        IsAuthenticated,
+    ]
+    authentication_classes = [
+        TokenAuthentication,
+    ]
+
+    class InputSerializer(serializers.Serializer):
+        name = serializers.CharField(max_length=128)
+        app_id = serializers.CharField(max_length=128)
+        secret_key = serializers.CharField(max_length=128)
+
+    def post(self, request):
+        user = request.user
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        _ = create_mp_account(**serializer.validated_data, user=user.id)
+        return Response(status=status.HTTP_201_CREATED)

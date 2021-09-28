@@ -150,5 +150,5 @@ MERCADOPAGO = {
     "success_url": "donations:payment_received",
     "failure_url": "http://localhost:8000/",
     "pending_url": "http://localhost:8000/",
-    "base_host": "https://36a1-181-95-13-54.ngrok.io",
+    "base_host": "https://015e-181-94-176-177.ngrok.io",
 }
