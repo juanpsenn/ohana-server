@@ -10,9 +10,9 @@ from app.events.selectors.events import get_event
 def donation_create(
     *,
     event: int,
-    user: id,
+    user: int,
     amount: float = 0,
-    donation_name: Optional[str] = None,
+    donation_name: Optional[str] = "Donacion Ohana!",
 ):
     event = get_event(event_id=event)
     owner = get_account_by_user(user=event.owner.id)
