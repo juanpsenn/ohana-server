@@ -4,7 +4,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from app.donations.selectors import donations_list_by_event
+from app.donations.selectors import donations_list_by_user
+from app.donations.serializers import PaymentSerializer
 from app.donations.services import donation_create
+from utilities.http import CustomPageNumberPagination
+from utilities.http import formatted_params
 
 
 class DonationCreateApi(APIView):
@@ -36,3 +41,48 @@ class PaymentReceiveApi(APIView):
         print(request.data)
         print(pk)
         return Response(status=201)
+
+
+class DonationsListApi(APIView, CustomPageNumberPagination):
+    def get(self, request):
+        donations = donations_list_by_event(
+            **formatted_params(request.query_params)
+        )
+
+        paginated_donations = self.paginate_queryset(
+            donations, request, view=self
+        )
+        return self.get_paginated_response(
+            PaymentSerializer(paginated_donations, many=True).data
+        )
+
+
+class DonationsListByUserApi(APIView, CustomPageNumberPagination):
+    def get(self, request):
+        donations = donations_list_by_user(
+            **formatted_params(request.query_params)
+        )
+
+        paginated_donations = self.paginate_queryset(
+            donations, request, view=self
+        )
+        return self.get_paginated_response(
+            PaymentSerializer(paginated_donations, many=True).data
+        )
+
+
+class MyDonationsListApi(APIView, CustomPageNumberPagination):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+
+    def get(self, request):
+        donations = donations_list_by_user(
+            **formatted_params(request.query_params), user=request.user.id
+        )
+
+        paginated_donations = self.paginate_queryset(
+            donations, request, view=self
+        )
+        return self.get_paginated_response(
+            PaymentSerializer(paginated_donations, many=True).data
+        )
