@@ -29,6 +29,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "juanpsenn.pythonanywhere.com",
     "localhost",
+    "*",
 ]
 
 # Application definition
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "corsheaders",
     "django_extensions",
+    "django_mercadopago",
 ]
 
 MIDDLEWARE = [
@@ -141,4 +143,12 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 GRAPH_MODELS = {
     "app_labels": ["app"],
+}
+
+MERCADOPAGO = {
+    "autoprocess": True,
+    "success_url": "donations:payment_received",
+    "failure_url": "http://localhost:8000/",
+    "pending_url": "http://localhost:8000/",
+    "base_host": "https://015e-181-94-176-177.ngrok.io",
 }

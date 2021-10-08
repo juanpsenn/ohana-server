@@ -21,4 +21,14 @@ urlpatterns = [
     path("api/admin/", admin.site.urls),
     path("api/auth/", include("app.auth.urls")),
     path("api/events/", include("app.events.urls")),
+    path(
+        "api/donations/",
+        include(("app.donations.urls", "app"), namespace="donations"),
+    ),
+    path(
+        "mercadopago/",
+        include(
+            ("django_mercadopago.urls", "django_mercadopago"), namespace="mp"
+        ),
+    ),
 ]
