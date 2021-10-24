@@ -7,6 +7,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from app.auth.selectors import get_account_by_user
+from app.auth.serializers import AccountSerializer
 from app.auth.serializers import UserSerializer
 from app.auth.service import create_mp_account
 from app.auth.service import signin
@@ -66,3 +68,20 @@ class CreateMPAccount(APIView):
 
         _ = create_mp_account(**serializer.validated_data, user=user.id)
         return Response(status=status.HTTP_201_CREATED)
+
+
+class GetMPAccount(APIView):
+    permission_classes = [
+        IsAuthenticated,
+    ]
+    authentication_classes = [
+        TokenAuthentication,
+    ]
+
+    def get(self, request):
+        user = request.user
+
+        account = get_account_by_user(user=user.id)
+        return Response(
+            data=AccountSerializer(account).data, status=status.HTTP_200_OK
+        )
