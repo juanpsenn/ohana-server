@@ -2,6 +2,7 @@ import re
 from typing import Optional
 
 from django.contrib.auth.models import User
+from django_mercadopago.models import Item
 from django_mercadopago.models import Payment
 
 
@@ -36,3 +37,10 @@ def user_by_payment(payment):
     reference = payment.preference.reference.split(".")[0]
     user_id = reference.split("-")[1]
     return User.objects.get(pk=user_id)
+
+
+def items_by_payment(payments):
+    approved_preferences = payments.filter(status="approved").values_list(
+        "preference_id"
+    )
+    return Item.objects.filter(preference_id__in=list(approved_preferences))

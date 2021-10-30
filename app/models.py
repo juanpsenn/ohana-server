@@ -1,7 +1,13 @@
 from django.db import models
+from django.db.models import Sum
+
+from app.donations.selectors import donations_list_by_event
+from app.donations.selectors import items_by_payment
 
 
 # Create your models here.
+
+
 class Event(models.Model):
     name = models.CharField(max_length=128)
     event_type = models.ForeignKey(
@@ -38,7 +44,7 @@ class Event(models.Model):
 
     @property
     def donations_count(self):
-        return 0
+        return donations_list_by_event(event=self.id).count()
 
     @property
     def currency(self):
@@ -46,7 +52,13 @@ class Event(models.Model):
 
     @property
     def funds_collected(self):
-        return 0
+        payments = donations_list_by_event(event=self.id)
+        return (
+            items_by_payment(payments).aggregate(Sum("unit_price"))[
+                "unit_price__sum"
+            ]
+            or 0
+        )
 
 
 class EventType(models.Model):
