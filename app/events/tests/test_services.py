@@ -155,6 +155,7 @@ def test_event_update():
         attention_schedule=[
             {"day": 1, "from_time": "09:00:00", "to_time": "13:00:00"}
         ],
+        user_request=event.owner.id,
     )
 
     event.refresh_from_db()

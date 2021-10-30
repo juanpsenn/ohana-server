@@ -5,6 +5,7 @@ from datetime import time
 from django.db import transaction
 
 from app import models
+from app.events.exceptions import UnauthorizedUpdate
 
 
 def contact_create(
@@ -76,15 +77,13 @@ def event_update(
     contact: dict = None,
     location: dict = None,
     category: int = None,
-    attention_schedule: list = None
+    attention_schedule: list = None,
+    user_request: int
 ) -> models.Event:
     with transaction.atomic():
-        if contact:
-            contact_update(**contact)
-        if location:
-            location_update(**location)
-
         event = models.Event.objects.filter(id=id)
+        if event and event.last().owner.id != user_request:
+            raise UnauthorizedUpdate("No autorizado")
         event.update(
             name=name,
             event_type_id=event_type,
@@ -96,6 +95,11 @@ def event_update(
             category_id=category,
         )
         event = event.last()
+
+        if contact:
+            contact_update(**contact)
+        if location:
+            location_update(**location)
 
         if attention_schedule:
             schedule_clean(attention_schedule=attention_schedule, event=event)

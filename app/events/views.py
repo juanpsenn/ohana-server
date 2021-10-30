@@ -170,5 +170,9 @@ class EventUpdateApi(APIView):
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        event = event_update(**serializer.validated_data, id=event_id)
+        event = event_update(
+            **serializer.validated_data,
+            id=event_id,
+            user_request=request.user.id,
+        )
         return Response(EventSerializer(event).data, status=201)
