@@ -1,9 +1,11 @@
 from rest_framework import serializers
+from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from app.events.exceptions import UnauthorizedUpdate
 from app.events.selectors.categories import list_categories
 from app.events.selectors.events import get_event
 from app.events.selectors.events import list_events
@@ -169,10 +171,14 @@ class EventUpdateApi(APIView):
     def put(self, request, event_id):
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-
-        event = event_update(
-            **serializer.validated_data,
-            id=event_id,
-            user_request=request.user.id,
-        )
+        try:
+            event = event_update(
+                **serializer.validated_data,
+                id=event_id,
+                user_request=request.user.id,
+            )
+        except UnauthorizedUpdate:
+            return Response(
+                {"error": "No autorizado"}, status=status.HTTP_401_UNAUTHORIZED
+            )
         return Response(EventSerializer(event).data, status=201)
