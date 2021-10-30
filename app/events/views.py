@@ -12,6 +12,7 @@ from app.events.selectors.events import list_events
 from app.events.serializers import CategorySerializer
 from app.events.serializers import EventSerializer
 from app.events.services.events import event_create
+from app.events.services.events import event_delete
 from app.events.services.events import event_update
 from utilities.http import CustomPageNumberPagination
 from utilities.serializers import inline_serializer
@@ -40,6 +41,7 @@ class CategoryListApi(APIView):
 class EventListApi(APIView, CustomPageNumberPagination):
     class FilterSerializer(serializers.Serializer):
         q = serializers.CharField(max_length=128, required=False)
+        cancelled = serializers.BooleanField(required=False)
 
     def get(self, request):
         filters_serializer = self.FilterSerializer(data=request.query_params)
@@ -63,6 +65,7 @@ class MyEventsListApi(APIView, CustomPageNumberPagination):
 
     class FilterSerializer(serializers.Serializer):
         q = serializers.CharField(max_length=128, required=False)
+        cancelled = serializers.BooleanField(required=False)
 
     def get(self, request):
         filters_serializer = self.FilterSerializer(data=request.query_params)
@@ -175,6 +178,20 @@ class EventUpdateApi(APIView):
             event = event_update(
                 **serializer.validated_data,
                 id=event_id,
+                user_request=request.user.id,
+            )
+        except UnauthorizedUpdate:
+            return Response(
+                {"error": "No autorizado"}, status=status.HTTP_401_UNAUTHORIZED
+            )
+        return Response(EventSerializer(event).data, status=201)
+
+
+class EventDeleteApi(APIView):
+    def put(self, request, event_id):
+        try:
+            event = event_delete(
+                event_id=event_id,
                 user_request=request.user.id,
             )
         except UnauthorizedUpdate:

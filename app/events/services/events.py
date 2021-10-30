@@ -151,3 +151,13 @@ def event_create(
             schedule_create(**schedule, event=event)
 
     return event
+
+
+def event_delete(*, event_id: int, user_request: int):
+    event = models.Event.objects.get(id=event_id)
+    if event and event.owner.id != user_request:
+        raise UnauthorizedUpdate("No autorizado")
+    if event.cancelled_at is None:
+        event.cancelled_at = datetime.now()
+        event.save()
+    return event

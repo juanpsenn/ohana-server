@@ -8,5 +8,6 @@ urlpatterns = [
     path("list/self/", views.MyEventsListApi.as_view()),
     path("create/", views.EventCreateApi.as_view()),
     path("update/<int:event_id>/", views.EventUpdateApi.as_view()),
+    path("delete/<int:event_id>/", views.EventDeleteApi.as_view()),
     path("categories/list/", views.CategoryListApi.as_view()),
 ]
