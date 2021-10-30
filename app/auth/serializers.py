@@ -9,7 +9,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserInfo
         depth = 1
-        fields = "__all__"
+        exclude = ("user",)
 
 
 class UserSerializer(serializers.ModelSerializer):

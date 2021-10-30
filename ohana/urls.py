@@ -21,6 +21,7 @@ urlpatterns = [
     path("api/admin/", admin.site.urls),
     path("api/auth/", include("app.auth.urls")),
     path("api/events/", include("app.events.urls")),
+    path("api/users/", include("app.users.urls")),
     path(
         "api/donations/",
         include(("app.donations.urls", "app"), namespace="donations"),
