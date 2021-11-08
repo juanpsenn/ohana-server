@@ -1,9 +1,10 @@
 from rest_framework.pagination import PageNumberPagination
 
-reserved = ["page", "size", "limit", "offset"]
+reserved = ["page", "page_size", "limit", "offset"]
 
 
 class CustomPageNumberPagination(PageNumberPagination):
+    page_size = 20
     page_size_query_param = "page_size"
     max_page_size = 100
 
