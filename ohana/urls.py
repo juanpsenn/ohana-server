@@ -32,4 +32,5 @@ urlpatterns = [
             ("django_mercadopago.urls", "django_mercadopago"), namespace="mp"
         ),
     ),
+    path("api/stats/", include("app.stats.urls")),
 ]
