@@ -29,3 +29,10 @@ class UserInfoUpdateApi(APIView):
         return Response(
             UserSerializer(user).data, status=status.HTTP_201_CREATED
         )
+
+
+class UserInfoGetApi(APIView):
+    def get(self, request):
+        return Response(
+            UserSerializer(request.user).data, status=status.HTTP_200_OK
+        )
