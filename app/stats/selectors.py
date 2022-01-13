@@ -26,7 +26,9 @@ def last_donated_events(user_id: int):
     current_year = datetime.now().year - 1
     return (
         Item.objects.filter(
-            preference__payments__in=donations.filter(approved__year=current_year)
+            preference__payments__in=donations.filter(
+                approved__year=current_year
+            )
         )
         .values("title")
         .annotate(donations=Count("id"), total_donated_amount=Sum("unit_price"))
