@@ -30,9 +30,7 @@ class DonationCreateApi(APIView):
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        payment_url = donation_create(
-            **serializer.validated_data, user=request.user.id
-        )
+        payment_url = donation_create(**serializer.validated_data, user=request.user.id)
         return Response(payment_url, status=201)
 
 
@@ -45,13 +43,9 @@ class PaymentReceiveApi(APIView):
 
 class DonationsListApi(APIView, CustomPageNumberPagination):
     def get(self, request):
-        donations = donations_list_by_event(
-            **formatted_params(request.query_params)
-        )
+        donations = donations_list_by_event(**formatted_params(request.query_params))
 
-        paginated_donations = self.paginate_queryset(
-            donations, request, view=self
-        )
+        paginated_donations = self.paginate_queryset(donations, request, view=self)
         return self.get_paginated_response(
             PaymentSerializer(paginated_donations, many=True).data
         )
@@ -59,13 +53,9 @@ class DonationsListApi(APIView, CustomPageNumberPagination):
 
 class DonationsListByUserApi(APIView, CustomPageNumberPagination):
     def get(self, request):
-        donations = donations_list_by_user(
-            **formatted_params(request.query_params)
-        )
+        donations = donations_list_by_user(**formatted_params(request.query_params))
 
-        paginated_donations = self.paginate_queryset(
-            donations, request, view=self
-        )
+        paginated_donations = self.paginate_queryset(donations, request, view=self)
         return self.get_paginated_response(
             PaymentSerializer(paginated_donations, many=True).data
         )
@@ -80,9 +70,7 @@ class MyDonationsListApi(APIView, CustomPageNumberPagination):
             **formatted_params(request.query_params), user=request.user.id
         )
 
-        paginated_donations = self.paginate_queryset(
-            donations, request, view=self
-        )
+        paginated_donations = self.paginate_queryset(donations, request, view=self)
         return self.get_paginated_response(
             PaymentSerializer(paginated_donations, many=True).data
         )

@@ -50,9 +50,7 @@ def signup(
     return user
 
 
-def create_mp_account(
-    *, name: str, user: int, app_id: str, secret_key: str
-) -> Account:
+def create_mp_account(*, name: str, user: int, app_id: str, secret_key: str) -> Account:
     return Account.objects.create(
         name=name,
         slug=f"{user}-{name.replace(' ', '-')}",

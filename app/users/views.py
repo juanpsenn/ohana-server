@@ -26,13 +26,9 @@ class UserInfoUpdateApi(APIView):
         serializer.is_valid(raise_exception=True)
 
         user = userinfo_update(**serializer.validated_data, id=id)
-        return Response(
-            UserSerializer(user).data, status=status.HTTP_201_CREATED
-        )
+        return Response(UserSerializer(user).data, status=status.HTTP_201_CREATED)
 
 
 class UserInfoGetApi(APIView):
     def get(self, request):
-        return Response(
-            UserSerializer(request.user).data, status=status.HTTP_200_OK
-        )
+        return Response(UserSerializer(request.user).data, status=status.HTTP_200_OK)

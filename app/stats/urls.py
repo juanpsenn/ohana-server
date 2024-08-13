@@ -1,6 +1,11 @@
 from django.urls import path
 
-from app.stats.views import LastDonatedEventsApi, DonationsCountByUser, DonationsByMonthApi, ListActiveEvents
+from app.stats.views import (
+    LastDonatedEventsApi,
+    DonationsCountByUser,
+    DonationsByMonthApi,
+    ListActiveEvents,
+)
 
 urlpatterns = [
     path("donations-by-month/", DonationsByMonthApi.as_view()),

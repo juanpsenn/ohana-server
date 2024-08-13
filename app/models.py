@@ -39,9 +39,7 @@ class Event(models.Model):
         null=True,
         related_name="events",
     )
-    owner = models.ForeignKey(
-        "auth.User", on_delete=models.DO_NOTHING, null=True
-    )
+    owner = models.ForeignKey("auth.User", on_delete=models.DO_NOTHING, null=True)
 
     @property
     def donations_count(self):
@@ -55,9 +53,7 @@ class Event(models.Model):
     def funds_collected(self):
         payments = donations_list_by_event(event=self.id)
         return (
-            items_by_payment(payments).aggregate(Sum("unit_price"))[
-                "unit_price__sum"
-            ]
+            items_by_payment(payments).aggregate(Sum("unit_price"))["unit_price__sum"]
             or 0
         )
 

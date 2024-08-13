@@ -128,9 +128,7 @@ def test_event_create():
         contact=model_to_dict(contact, exclude=["id"]),
         location=model_to_dict(location, exclude=["id"]),
         category=category.id,
-        attention_schedule=[
-            {"day": 1, "from_time": "09:00:00", "to_time": "13:00:00"}
-        ],
+        attention_schedule=[{"day": 1, "from_time": "09:00:00", "to_time": "13:00:00"}],
         user=owner.id,
     )
 
@@ -152,9 +150,7 @@ def test_event_update():
         description="Lorem ipsum",
         contact=model_to_dict(event.contact),
         location=model_to_dict(event.location),
-        attention_schedule=[
-            {"day": 1, "from_time": "09:00:00", "to_time": "13:00:00"}
-        ],
+        attention_schedule=[{"day": 1, "from_time": "09:00:00", "to_time": "13:00:00"}],
         user_request=event.owner.id,
     )
 

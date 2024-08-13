@@ -17,9 +17,7 @@ def donation_create(
     event = get_event(event_id=event)
     owner = get_account_by_user(user=event.owner.id)
     reference = f"{event.id}-{user}.{uuid.uuid4().hex}"
-    preference = models.Preference.objects.create(
-        owner=owner, reference=reference
-    )
+    preference = models.Preference.objects.create(owner=owner, reference=reference)
     models.Item.objects.create(
         title=donation_name,
         quantity=1,

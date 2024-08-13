@@ -82,6 +82,4 @@ class GetMPAccount(APIView):
         user = request.user
 
         account = get_account_by_user(user=user.id)
-        return Response(
-            data=AccountSerializer(account).data, status=status.HTTP_200_OK
-        )
+        return Response(data=AccountSerializer(account).data, status=status.HTTP_200_OK)

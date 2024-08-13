@@ -23,18 +23,14 @@ class EventGetApi(APIView, CustomPageNumberPagination):
         event = get_event(event_id)
         if event:
             return Response(EventSerializer(event).data, status=200)
-        return Response(
-            {"detail": f"Event <id:{event_id}> not found."}, status=404
-        )
+        return Response({"detail": f"Event <id:{event_id}> not found."}, status=404)
 
 
 class CategoryListApi(APIView):
     def get(self, request):
         categories = list_categories()
         if categories:
-            return Response(
-                CategorySerializer(categories, many=True).data, status=200
-            )
+            return Response(CategorySerializer(categories, many=True).data, status=200)
         return Response({"detail": "No categories found."}, status=204)
 
 

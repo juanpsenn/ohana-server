@@ -8,12 +8,8 @@ from app import models
 from app.events.exceptions import UnauthorizedUpdate
 
 
-def contact_create(
-    *, name: str, phone: str, email: str
-) -> models.ContactInformation:
-    return models.ContactInformation.objects.create(
-        name=name, phone=phone, email=email
-    )
+def contact_create(*, name: str, phone: str, email: str) -> models.ContactInformation:
+    return models.ContactInformation.objects.create(name=name, phone=phone, email=email)
 
 
 def contact_update(
@@ -36,9 +32,7 @@ def location_update(
     *, id: int, street: str, address_line: str, postal_code: int
 ) -> models.Location:
     location = models.Location.objects.filter(id=id)
-    location.update(
-        street=street, address_line=address_line, postal_code=postal_code
-    )
+    location.update(street=street, address_line=address_line, postal_code=postal_code)
     return location.last()
 
 

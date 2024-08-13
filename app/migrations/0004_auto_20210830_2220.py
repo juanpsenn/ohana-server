@@ -13,9 +13,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="event",
             name="goal",
-            field=models.DecimalField(
-                decimal_places=2, max_digits=15, null=True
-            ),
+            field=models.DecimalField(decimal_places=2, max_digits=15, null=True),
         ),
         migrations.AddField(
             model_name="event",
