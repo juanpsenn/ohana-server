@@ -27,7 +27,9 @@ SECRET_KEY = (
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    "legendary-tribble-w97w4gjp6jvhgj59-8000.app.github.dev"
     "juanpsenn.pythonanywhere.com",
+    "ohana-aws.us-east-2.elasticbeanstalk.com",
     "localhost",
     "*",
 ]
@@ -150,5 +152,5 @@ MERCADOPAGO = {
     "success_url": "http://localhost:3000/app/donation-success",
     "failure_url": "http://localhost:8000/",
     "pending_url": "http://localhost:8000/",
-    "base_host": "https://juanpsenn.pythonanywhere.com/",
+    "base_host": "https://legendary-tribble-w97w4gjp6jvhgj59-8000.app.github.dev/",
 }
