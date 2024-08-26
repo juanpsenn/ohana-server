@@ -34,7 +34,8 @@ def donations_amount_by_user(user_id: int):
 
 def last_donated_events(user_id: int):
     donations = donations_list_by_user(user=user_id)
-    current_year = datetime.now().year - 1
+    current_year = datetime.now().year
+    print(donations)
     return (
         Item.objects.filter(
             preference__payments__in=donations.filter(approved__year=current_year)
@@ -44,16 +45,3 @@ def last_donated_events(user_id: int):
         .values("title", "donations", "total_donated_amount")
         .order_by("-total_donated_amount")
     )
-
-
-def generate_rand_data():
-    data = []
-    for i in range(10):
-        data.append(
-            {
-                "title": f"Campain {i}",
-                "donations": random.randint(1, 100),
-                "total_donated_amount": random.randint(1, 25000),
-            }
-        )
-    return data

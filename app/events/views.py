@@ -120,6 +120,7 @@ class EventCreateApi(APIView):
             many=True,
             allow_null=True,
         )
+        items = serializers.ListField(allow_null=True)
 
     def post(self, request):
         serializer = self.InputSerializer(data=request.data)
@@ -166,6 +167,7 @@ class EventUpdateApi(APIView):
             many=True,
             allow_null=True,
         )
+        items = serializers.ListField(allow_null=True)
 
     def put(self, request, event_id):
         serializer = self.InputSerializer(data=request.data)

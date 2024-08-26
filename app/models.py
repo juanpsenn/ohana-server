@@ -1,9 +1,12 @@
 from django.db import models
 from django.db.models import Sum
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.contrib.auth.models import User
 
 from app.donations.selectors import donations_list_by_event
 from app.donations.selectors import items_by_payment
-
+from django_mercadopago.models import Payment
 
 # Create your models here.
 
@@ -62,6 +65,15 @@ class EventType(models.Model):
     name = models.CharField(max_length=32)
 
 
+class EventItem(models.Model):
+    event = models.ForeignKey(
+        "app.Event", on_delete=models.DO_NOTHING, related_name="items"
+    )
+    name = models.CharField(max_length=32)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+    done = models.BooleanField(default=False)
+
+
 class DaysOfWeek(models.IntegerChoices):
     SUNDAY = 0, "Domingo"
     MONDAY = 1, "Lunes"
@@ -118,3 +130,28 @@ class UserInfo(models.Model):
 
 class Country(models.Model):
     name = models.CharField(max_length=128)
+
+
+class Notification(models.Model):
+    payment = models.ForeignKey(
+        Payment, on_delete=models.DO_NOTHING, related_name="ohana_notifications"
+    )
+
+
+@receiver(post_save, sender=Payment)
+def print_notification(sender, instance, **kwargs):
+    try:
+        n = Notification.objects.get(payment_id=instance.id)
+        print(f"{n.payment.id} already created")
+        if n.payment.status == "approved":
+            print(f"{n.payment.id} already approved")
+    except Notification.DoesNotExist:
+        n = Notification.objects.create(payment_id=instance.id)
+        if n.payment.status == "approved":
+            print(f"{n.payment.id} payment approved")
+            user = User.objects.get(
+                id=n.payment.preference.reference.split(".")[0].split("-")[1]
+            )
+            print(f"Notify to:{user.email}")
+        else:
+            print(f"{n.payment.id} payment pending")

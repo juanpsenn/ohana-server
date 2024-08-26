@@ -36,6 +36,14 @@ def location_update(
     return location.last()
 
 
+def item_create(name: str, event) -> models.EventItem:
+    return models.EventItem.objects.create(name=name, event=event)
+
+
+def item_clean(items: list, event: models.Event):
+    event.items.exclude(name__in=items).delete()
+
+
 def schedule_create(
     *, day: int, from_time: time, to_time: time, event: models.Event
 ) -> models.AttentionSchedule:
@@ -72,7 +80,8 @@ def event_update(
     location: dict = None,
     category: int = None,
     attention_schedule: list = None,
-    user_request: int
+    user_request: int,
+    items=None
 ) -> models.Event:
     with transaction.atomic():
         event = models.Event.objects.filter(id=id)
@@ -103,6 +112,13 @@ def event_update(
                 else:
                     schedule_create(**schedule, event=event)
 
+        event_items = [ei.name for ei in event.items.all()]
+        if items:
+            item_clean(items, event)
+            for item in items:
+                if item not in event_items:
+                    models.EventItem.objects.create(name=item, event=event)
+
     return event
 
 
@@ -119,13 +135,13 @@ def event_create(
     location: dict = None,
     category: int = None,
     attention_schedule: list = None,
-    user: int
+    user: int,
+    items=None
 ) -> models.Event:
     if contact:
         contact = contact_create(**contact)
     if location:
         location = location_create(**location)
-
     event = models.Event.objects.create(
         name=name,
         event_type_id=event_type,
@@ -143,6 +159,10 @@ def event_create(
     if attention_schedule:
         for schedule in attention_schedule:
             schedule_create(**schedule, event=event)
+
+    if items:
+        for item in items:
+            item_create(item, event=event)
 
     return event
 

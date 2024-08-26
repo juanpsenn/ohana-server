@@ -21,6 +21,27 @@ def list_active_events(user_id):
     ).count()
 
 
+def percentage_finished_events(user_id):
+    today = timezone.now().date()
+
+    # Obtiene el número total de eventos del usuario
+    total_events = Event.objects.filter(owner_id=user_id).count()
+
+    # Obtiene el número de eventos finalizados (con end_date antes de hoy)
+    finished_events = Event.objects.filter(owner_id=user_id, end_date__lt=today).count()
+
+    if total_events > 0:
+        percentage_finished = (finished_events / total_events) * 100
+    else:
+        percentage_finished = 0
+
+    return {
+        "total_events": total_events,
+        "finished_events": finished_events,
+        "percentage_finished": percentage_finished,
+    }
+
+
 def get_event(event_id: int) -> Optional[Event]:
     try:
         event = Event.objects.get(pk=event_id)
