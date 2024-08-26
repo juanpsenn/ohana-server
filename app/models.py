@@ -4,6 +4,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
 
+from app import utils
 from app.donations.selectors import donations_list_by_event
 from app.donations.selectors import items_by_payment
 from django_mercadopago.models import Payment
@@ -153,5 +154,6 @@ def print_notification(sender, instance, **kwargs):
                 id=n.payment.preference.reference.split(".")[0].split("-")[1]
             )
             print(f"Notify to:{user.email}")
+            utils.send_email(user.email)
         else:
             print(f"{n.payment.id} payment pending")
