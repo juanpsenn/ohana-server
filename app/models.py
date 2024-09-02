@@ -32,6 +32,7 @@ class Event(models.Model):
         null=True,
         related_name="events",
     )
+    complete = models.BooleanField(default=False)
     image = models.URLField(null=True)
     goal = models.DecimalField(decimal_places=2, max_digits=15, null=True)
     registred_at = models.DateTimeField(auto_now_add=True, null=True)
@@ -60,6 +61,10 @@ class Event(models.Model):
             items_by_payment(payments).aggregate(Sum("unit_price"))["unit_price__sum"]
             or 0
         )
+
+    @property
+    def likes_count(self):
+        return self.likes.count() or 0
 
 
 class EventType(models.Model):
@@ -139,6 +144,11 @@ class Notification(models.Model):
     )
 
 
+class Like(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.DO_NOTHING, related_name="likes")
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="likes")
+
+
 @receiver(post_save, sender=Payment)
 def print_notification(sender, instance, **kwargs):
     try:
@@ -157,3 +167,14 @@ def print_notification(sender, instance, **kwargs):
             utils.send_email(user.email)
         else:
             print(f"{n.payment.id} payment pending")
+
+
+@receiver(post_save, sender=EventItem)
+def set_complete(sender, instance, **kwargs):
+    complete = True
+    for item in instance.event.items.all():
+        if not item.done:
+            complete = False
+            break
+    instance.event.complete = complete
+    instance.event.save()

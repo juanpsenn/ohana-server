@@ -10,4 +10,6 @@ urlpatterns = [
     path("update/<int:event_id>/", views.EventUpdateApi.as_view()),
     path("delete/<int:event_id>/", views.EventDeleteApi.as_view()),
     path("categories/list/", views.CategoryListApi.as_view()),
+    path("item/done/", views.EventItemDoneApi.as_view()),
+    path("like/<int:event_id>/", views.LikeEventApi.as_view()),
 ]

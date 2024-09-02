@@ -19,9 +19,13 @@ class ItemSerializer(serializers.ModelSerializer):
         exclude = ["event"]
 
     def to_representation(self, instance):
-        # Llama a la implementación original de to_representation para obtener el objeto completo
-        representation = super().to_representation(instance)
-        return representation
+        return instance.name
+
+
+class ItemSerializerComplete(serializers.ModelSerializer):
+    class Meta:
+        model = EventItem
+        exclude = ["event"]
 
 
 class EventSerializer(serializers.ModelSerializer):
@@ -29,7 +33,13 @@ class EventSerializer(serializers.ModelSerializer):
     funds_collected = serializers.DecimalField(max_digits=15, decimal_places=2)
     currency = serializers.CharField()
     donations_count = serializers.IntegerField()
+    likes_count = serializers.IntegerField()
     items = ItemSerializer(many=True)
+    items_complete = ItemSerializerComplete(many=True, source="items")
+    liked = serializers.SerializerMethodField()
+
+    def get_liked(self, instance):
+        return bool(instance.likes.filter(user_id=self.context.get("user")).count())
 
     class Meta:
         model = Event

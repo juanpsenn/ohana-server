@@ -36,8 +36,6 @@ class DonationCreateApi(APIView):
 
 class PaymentReceiveApi(APIView):
     def post(self, request, pk):
-        print(request.data)
-        print(pk)
         return Response(status=201)
 
 

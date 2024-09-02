@@ -30,7 +30,6 @@ def donations_list_by_event(*, event: Optional[int] = None):
         )
     else:
         payments = Payment.objects.select_related("preference").all()
-    print(payments, "PAYMENTS")
     return payments
 
 

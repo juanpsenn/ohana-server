@@ -35,7 +35,6 @@ def donations_amount_by_user(user_id: int):
 def last_donated_events(user_id: int):
     donations = donations_list_by_user(user=user_id)
     current_year = datetime.now().year
-    print(donations)
     return (
         Item.objects.filter(
             preference__payments__in=donations.filter(approved__year=current_year)

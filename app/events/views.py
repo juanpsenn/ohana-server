@@ -9,11 +9,13 @@ from app.events.exceptions import UnauthorizedUpdate
 from app.events.selectors.categories import list_categories
 from app.events.selectors.events import get_event
 from app.events.selectors.events import list_events
-from app.events.serializers import CategorySerializer
+from app.events.serializers import CategorySerializer, ItemSerializerComplete
 from app.events.serializers import EventSerializer
+from app.events.services.event_items import event_item_update
 from app.events.services.events import event_create
 from app.events.services.events import event_delete
 from app.events.services.events import event_update
+from app.events.services.likes import like_event
 from utilities.http import CustomPageNumberPagination
 from utilities.serializers import inline_serializer
 
@@ -47,7 +49,9 @@ class EventListApi(APIView, CustomPageNumberPagination):
 
         paginated_events = self.paginate_queryset(events, request, view=self)
         return self.get_paginated_response(
-            EventSerializer(paginated_events, many=True).data
+            EventSerializer(
+                paginated_events, context={"user": request.user.id}, many=True
+            ).data
         )
 
 
@@ -197,3 +201,24 @@ class EventDeleteApi(APIView):
                 {"error": "No autorizado"}, status=status.HTTP_401_UNAUTHORIZED
             )
         return Response(EventSerializer(event).data, status=201)
+
+
+class EventItemDoneApi(APIView):
+    class InputSerializer(serializers.Serializer):
+        id = serializers.IntegerField()
+        done = serializers.BooleanField()
+
+    def put(self, request):
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        item = event_item_update(**serializer.validated_data)
+        return Response(ItemSerializerComplete(item).data, status=201)
+
+
+class LikeEventApi(APIView):
+    def put(self, request, event_id):
+        like = like_event(event_id, request.user.id)
+        return Response(
+            EventSerializer(like.event, context={"user": request.user.id}).data,
+            status=201,
+        )
