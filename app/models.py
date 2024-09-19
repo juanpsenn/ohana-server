@@ -45,6 +45,7 @@ class Event(models.Model):
         related_name="events",
     )
     owner = models.ForeignKey("auth.User", on_delete=models.DO_NOTHING, null=True)
+    shared = models.IntegerField(default=0)
 
     @property
     def donations_count(self):

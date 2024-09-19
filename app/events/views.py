@@ -16,6 +16,7 @@ from app.events.services.events import event_create
 from app.events.services.events import event_delete
 from app.events.services.events import event_update
 from app.events.services.likes import like_event
+from app.events.services.shares import share_event
 from utilities.http import CustomPageNumberPagination
 from utilities.serializers import inline_serializer
 
@@ -24,7 +25,10 @@ class EventGetApi(APIView, CustomPageNumberPagination):
     def get(self, request, event_id):
         event = get_event(event_id)
         if event:
-            return Response(EventSerializer(event).data, status=200)
+            return Response(
+                EventSerializer(event, context={"user": request.user.id}).data,
+                status=200,
+            )
         return Response({"detail": f"Event <id:{event_id}> not found."}, status=404)
 
 
@@ -131,7 +135,9 @@ class EventCreateApi(APIView):
         serializer.is_valid(raise_exception=True)
 
         event = event_create(**serializer.validated_data, user=request.user.id)
-        return Response(EventSerializer(event).data, status=201)
+        return Response(
+            EventSerializer(event, context={"user": request.user.id}).data, status=201
+        )
 
 
 class EventUpdateApi(APIView):
@@ -186,7 +192,9 @@ class EventUpdateApi(APIView):
             return Response(
                 {"error": "No autorizado"}, status=status.HTTP_401_UNAUTHORIZED
             )
-        return Response(EventSerializer(event).data, status=201)
+        return Response(
+            EventSerializer(event, context={"user": request.user.id}).data, status=201
+        )
 
 
 class EventDeleteApi(APIView):
@@ -220,5 +228,14 @@ class LikeEventApi(APIView):
         like = like_event(event_id, request.user.id)
         return Response(
             EventSerializer(like.event, context={"user": request.user.id}).data,
+            status=201,
+        )
+
+
+class ShareEventApi(APIView):
+    def put(self, request, event_id):
+        event = share_event(event_id)
+        return Response(
+            EventSerializer(event, context={"user": request.user.id}).data,
             status=201,
         )

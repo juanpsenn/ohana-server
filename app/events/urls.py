@@ -12,4 +12,5 @@ urlpatterns = [
     path("categories/list/", views.CategoryListApi.as_view()),
     path("item/done/", views.EventItemDoneApi.as_view()),
     path("like/<int:event_id>/", views.LikeEventApi.as_view()),
+    path("share/<int:event_id>/", views.ShareEventApi.as_view()),
 ]
