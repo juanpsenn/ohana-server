@@ -165,7 +165,11 @@ def print_notification(sender, instance, **kwargs):
                 id=n.payment.preference.reference.split(".")[0].split("-")[1]
             )
             print(f"Notify to:{user.email}")
-            utils.send_email(user.email)
+            item = n.payment.preference.items.first()
+            amount = item.unit_price | 0.0
+            event_name = item.title | ""
+            body = utils.body.format(amount=str(amount),event_name=str(event_name))
+            utils.send_email(user.email, body=body)
         else:
             print(f"{n.payment.id} payment pending")
 

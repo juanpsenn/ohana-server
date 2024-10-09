@@ -53,11 +53,11 @@ body = """"
         </div>
         <div class="content">
             <p>Estimado/a Donante,</p>
-            <p>Queremos expresar nuestro más sincero agradecimiento por su contribución de <strong>$X</strong> durante el evento <strong>Y</strong>.</p>
+            <p>Queremos expresar nuestro más sincero agradecimiento por su contribución de <strong>{amount}</strong> durante el evento <strong>{event_name}</strong>.</p>
             <p>Su apoyo es invaluable para nosotros y nos ayudará a continuar con nuestra misión.</p>
             <p>Gracias por hacer una diferencia.</p>
             <p>Con agradecimiento,</p>
-            <p>El Equipo de [Nombre Organizacion]</p>
+            <p>El Equipo de Ohana!</p>
         </div>
         <div class="footer">
             <p>Este correo fue enviado a usted porque hizo una donación en nuestro evento. Si tiene alguna pregunta, por favor contacte a nuestro soporte.</p>
