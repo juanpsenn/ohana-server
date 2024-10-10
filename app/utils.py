@@ -4,7 +4,7 @@ from email.mime.text import MIMEText
 
 # Define the subject and body of the email.
 subject = "Donacion Ohana!"
-body = """"
+a = """
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -53,7 +53,16 @@ body = """"
         </div>
         <div class="content">
             <p>Estimado/a Donante,</p>
-            <p>Queremos expresar nuestro más sincero agradecimiento por su contribución de <strong>{amount}</strong> durante el evento <strong>{event_name}</strong>.</p>
+            <p>Queremos expresar nuestro más sincero agradecimiento por su contribución de <strong>
+            
+            """
+
+b = """
+</strong> durante el evento <strong>
+"""
+
+c = """
+</strong>.</p>
             <p>Su apoyo es invaluable para nosotros y nos ayudará a continuar con nuestra misión.</p>
             <p>Gracias por hacer una diferencia.</p>
             <p>Con agradecimiento,</p>
@@ -67,6 +76,12 @@ body = """"
 </body>
 </html>
 """
+
+body = a + b + c
+
+def build_body(amount, event):
+    return a + " " + str(amount) + " " + b + " " + event + c
+
 # Define the sender's email address.
 sender = "ohana.notifications.utn@gmail.com"
 # Password for the sender's email account.
