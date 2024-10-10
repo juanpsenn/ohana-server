@@ -169,7 +169,7 @@ def print_notification(sender, instance, **kwargs):
             amount = item.unit_price if item else 0.0
             event_name = item.title if item else ""
             body = utils.build_body(amount=str(amount),event=str(event_name))
-            utils.send_email(user.email, body=body)
+            utils.send_email(user.email, body_html=body)
         else:
             print(f"{n.payment.id} payment pending")
 
