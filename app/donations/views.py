@@ -1,3 +1,6 @@
+from io import BytesIO
+from django.http import HttpResponse
+from openpyxl import Workbook
 from rest_framework import serializers
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -72,3 +75,48 @@ class MyDonationsListApi(APIView, CustomPageNumberPagination):
         return self.get_paginated_response(
             PaymentSerializer(paginated_donations, many=True).data
         )
+
+
+class DonationsReportAPI(APIView):
+    def get(self, request):
+        payments = donations_list_by_event(**formatted_params(request.query_params))
+
+        
+        # Create a new workbook and select the active sheet
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Donations Report"
+
+        # Add headers
+        headers = ["Donacion", "Usuario", "Estado", "Fecha", "Fecha aprobacion", "Descripcion", "Monto"]
+        ws.append(headers)
+
+        # Add data
+        for payment in payments:
+            serialized_payment = PaymentSerializer(payment).data
+            user = serialized_payment['user']
+            donations = serialized_payment['donation']
+            
+            for donation in donations:
+                row = [
+                    serialized_payment['id'],
+                    user,
+                    serialized_payment['status'],
+                    serialized_payment['created'],
+                    serialized_payment['approved'],
+                    donation['title'],
+                    donation['unit_price']
+                ]
+                ws.append(row)
+
+        # Create a BytesIO object to save the workbook to
+        excel_file = BytesIO()
+        wb.save(excel_file)
+        excel_file.seek(0)
+
+        # Create the HttpResponse object with Excel mime type
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename=donations_report.xlsx'
+        response.write(excel_file.getvalue())
+
+        return response
