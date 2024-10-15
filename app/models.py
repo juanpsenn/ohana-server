@@ -149,9 +149,11 @@ class Like(models.Model):
     event = models.ForeignKey(Event, on_delete=models.DO_NOTHING, related_name="likes")
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="likes")
 
+
 class RecoveryCode(models.Model):
     username = models.CharField(max_length=150, unique=True)
     code = models.CharField(max_length=6)
+
 
 @receiver(post_save, sender=Payment)
 def print_notification(sender, instance, **kwargs):
@@ -171,7 +173,7 @@ def print_notification(sender, instance, **kwargs):
             item = n.payment.preference.items.first()
             amount = item.unit_price if item else 0.0
             event_name = item.title if item else ""
-            body = utils.build_body(amount=str(amount),event=str(event_name))
+            body = utils.build_body(amount=str(amount), event=str(event_name))
             utils.send_email(user.email, body_html=body)
         else:
             print(f"{n.payment.id} payment pending")

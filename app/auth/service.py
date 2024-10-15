@@ -86,6 +86,7 @@ b = """
 </html>
 """
 
+
 def signin(user: auth_models.User):
     # delete old token
     try:
@@ -128,6 +129,7 @@ def signup(
     )
     return user
 
+
 def recover_password(username):
     user = None
     try:
@@ -138,15 +140,24 @@ def recover_password(username):
     if user:
         recovery_code = ""
         try:
-            recovery_code = models.RecoveryCode.objects.create(username=username, code=randint(100000,999999))
+            recovery_code = models.RecoveryCode.objects.create(
+                username=username, code=randint(100000, 999999)
+            )
         except IntegrityError:
             old_code = models.RecoveryCode.objects.get(username=username)
             old_code.delete()
-            recovery_code = models.RecoveryCode.objects.create(username=username, code=randint(100000,999999))
+            recovery_code = models.RecoveryCode.objects.create(
+                username=username, code=randint(100000, 999999)
+            )
         body = a + f"localhost:8000/app/recover/password/?code={recovery_code.code}" + b
-        send_email(recipient=user.email, subject="Ohana - Recuperación de constaseña", body_html=body)
+        send_email(
+            recipient=user.email,
+            subject="Ohana - Recuperación de constaseña",
+            body_html=body,
+        )
         return True
     return False
+
 
 def create_mp_account(*, name: str, user: int, app_id: str, secret_key: str) -> Account:
     return Account.objects.create(

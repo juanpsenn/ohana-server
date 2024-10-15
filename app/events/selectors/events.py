@@ -7,10 +7,7 @@ from django.utils import timezone
 
 
 def list_events(*, filters: dict = None):
-    default_filters = {
-        "finished": False,
-        "cancelled": False
-    }
+    default_filters = {"finished": False, "cancelled": False}
     filters = filters or default_filters
     print(filters)
     qs = Event.objects.all()

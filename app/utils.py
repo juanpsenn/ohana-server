@@ -79,8 +79,10 @@ c = """
 
 body = a + b + c
 
+
 def build_body(amount, event):
     return a + " " + str(amount) + " " + b + " " + event + c
+
 
 # Define the sender's email address.
 sender = "ohana.notifications.utn@gmail.com"

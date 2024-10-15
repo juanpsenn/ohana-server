@@ -5,6 +5,7 @@ from app.models import Category
 from app.models import Event
 from app.auth.selectors import get_account_by_user
 
+
 class AttentionScheduleSerializer(serializers.ModelSerializer):
     day = serializers.CharField(source="get_day_display")
 

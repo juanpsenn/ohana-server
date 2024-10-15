@@ -81,31 +81,38 @@ class DonationsReportAPI(APIView):
     def get(self, request):
         payments = donations_list_by_event(**formatted_params(request.query_params))
 
-        
         # Create a new workbook and select the active sheet
         wb = Workbook()
         ws = wb.active
         ws.title = "Donations Report"
 
         # Add headers
-        headers = ["Donacion", "Usuario", "Estado", "Fecha", "Fecha aprobacion", "Descripcion", "Monto"]
+        headers = [
+            "Donacion",
+            "Usuario",
+            "Estado",
+            "Fecha",
+            "Fecha aprobacion",
+            "Descripcion",
+            "Monto",
+        ]
         ws.append(headers)
 
         # Add data
         for payment in payments:
             serialized_payment = PaymentSerializer(payment).data
-            user = serialized_payment['user']
-            donations = serialized_payment['donation']
-            
+            user = serialized_payment["user"]
+            donations = serialized_payment["donation"]
+
             for donation in donations:
                 row = [
-                    serialized_payment['id'],
+                    serialized_payment["id"],
                     user,
-                    serialized_payment['status'],
-                    serialized_payment['created'],
-                    serialized_payment['approved'],
-                    donation['title'],
-                    donation['unit_price']
+                    serialized_payment["status"],
+                    serialized_payment["created"],
+                    serialized_payment["approved"],
+                    donation["title"],
+                    donation["unit_price"],
                 ]
                 ws.append(row)
 
@@ -115,8 +122,10 @@ class DonationsReportAPI(APIView):
         excel_file.seek(0)
 
         # Create the HttpResponse object with Excel mime type
-        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-        response['Content-Disposition'] = 'attachment; filename=donations_report.xlsx'
+        response = HttpResponse(
+            content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+        response["Content-Disposition"] = "attachment; filename=donations_report.xlsx"
         response.write(excel_file.getvalue())
 
         return response
