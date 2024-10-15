@@ -44,6 +44,7 @@ class EventListApi(APIView, CustomPageNumberPagination):
     class FilterSerializer(serializers.Serializer):
         q = serializers.CharField(max_length=128, required=False)
         cancelled = serializers.BooleanField(required=False)
+        finished = serializers.BooleanField(required=False)
         filters = serializers.CharField(max_length=256, required=False)
 
     def get(self, request):

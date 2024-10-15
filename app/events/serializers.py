@@ -3,7 +3,7 @@ from rest_framework import serializers
 from app.models import AttentionSchedule, EventItem
 from app.models import Category
 from app.models import Event
-
+from app.auth.selectors import get_account_by_user
 
 class AttentionScheduleSerializer(serializers.ModelSerializer):
     day = serializers.CharField(source="get_day_display")
@@ -37,6 +37,10 @@ class EventSerializer(serializers.ModelSerializer):
     items = ItemSerializer(many=True)
     items_complete = ItemSerializerComplete(many=True, source="items")
     liked = serializers.SerializerMethodField()
+    active_mp = serializers.SerializerMethodField()
+
+    def get_active_mp(self, instance):
+        return bool(get_account_by_user(user=instance.owner_id))
 
     def get_liked(self, instance):
         return bool(instance.likes.filter(user_id=self.context.get("user")).count())
