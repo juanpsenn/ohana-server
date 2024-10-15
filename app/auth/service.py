@@ -145,7 +145,8 @@ def recover_password(username):
             recovery_code = models.RecoveryCode.objects.create(username=username, code=randint(100000,999999))
         body = a + f"localhost:8000/app/recover/password/?code={recovery_code.code}" + b
         send_email(recipient=user.email, subject="Ohana - Recuperación de constaseña", body_html=body)
-    
+        return True
+    return False
 
 def create_mp_account(*, name: str, user: int, app_id: str, secret_key: str) -> Account:
     return Account.objects.create(
