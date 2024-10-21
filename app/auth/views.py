@@ -10,9 +10,9 @@ from rest_framework.views import APIView
 from app.auth.selectors import get_account_by_user
 from app.auth.serializers import AccountSerializer
 from app.auth.serializers import UserSerializer
-from app.auth.service import create_mp_account
+from app.auth.service import change_password_with_pin, change_password_with_user, create_mp_account
 from app.auth.service import signin
-from app.auth.service import signup
+from app.auth.service import signup, recover_password
 
 
 class AuthApi(ObtainAuthToken):
@@ -69,6 +69,33 @@ class CreateMPAccount(APIView):
         _ = create_mp_account(**serializer.validated_data, user=user.id)
         return Response(status=status.HTTP_201_CREATED)
 
+
+class RecoverPasswordApi(APIView):
+    permission_classes = [
+        AllowAny,
+    ]
+
+    def put(self, request):
+        username = request.query_params.get("username")
+        recovered = recover_password(username)
+        return Response(status=status.HTTP_201_CREATED, data=str({"created": recovered}))
+
+class ChangePasswordPinApi(APIView):
+    permission_classes = [
+        AllowAny,
+    ]
+
+    def put(self, request):
+        pin = request.query_params.get("pin")
+        password = request.query_params.get("password")
+        changed = change_password_with_pin(pin, password)
+        return Response(status=status.HTTP_201_CREATED, data=str({"changed": changed}))
+
+class ChangePasswordApi(APIView):
+    def put(self, request):
+        password = request.query_params.get("password")
+        changed = change_password_with_user(request.user.id, password)
+        return Response(status=status.HTTP_201_CREATED, data=str({"changed": changed}))
 
 class GetMPAccount(APIView):
     permission_classes = [

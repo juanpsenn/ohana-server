@@ -159,6 +159,29 @@ def recover_password(username):
     return False
 
 
+def change_password_with_pin(code, new_password):
+    try:
+        recovery_code = models.RecoveryCode.objects.get(code=code)
+        user = auth_models.User.objects.get(username=recovery_code.username)
+        user.set_password(new_password)
+        user.save()
+        
+        recovery_code.delete()
+
+        return True
+
+    except models.RecoveryCode.DoesNotExist:
+        return False
+
+def change_password_with_user(user_id, password):
+        try:
+            user = auth_models.User.objects.get(id=user_id)
+            user.set_password(password)
+            user.save()
+            return True
+        except:
+            return False
+
 def create_mp_account(*, name: str, user: int, app_id: str, secret_key: str) -> Account:
     return Account.objects.create(
         name=name,
