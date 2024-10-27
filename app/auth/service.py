@@ -149,7 +149,7 @@ def recover_password(username):
             recovery_code = models.RecoveryCode.objects.create(
                 username=username, code=randint(100000, 999999)
             )
-        body = a + f"localhost:8000/app/recover/password/?code={recovery_code.code}" + b
+        body = a + f"https://symmetrical-sniffle-4g7xrw954j637xr-3000.app.github.dev/app/recover/password/?code={recovery_code.code}" + b
         send_email(
             recipient=user.email,
             subject="Ohana - Recuperación de constaseña",
