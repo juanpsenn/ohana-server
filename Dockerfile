@@ -1,10 +1,10 @@
 FROM python:3.9.6-alpine
 ENV PYTHONUNBUFFERED=1
 WORKDIR /app
-COPY requirements.txt /app/
+COPY reqs.txt /app/
 
 RUN apk add python3-dev build-base
-RUN pip install -r ./requirements.txt
+RUN pip install -r ./reqs.txt
 
 COPY . /app/
 
